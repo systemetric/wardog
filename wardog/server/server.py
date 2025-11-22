@@ -2,7 +2,6 @@ import json
 
 from .request import WarDogRequest
 from .state import WarDogState
-from .dispatch import WarDogHardwareDispatch
 
 from hopper.client import *
 from hopper.common import *
@@ -20,21 +19,26 @@ class WarDogServer:
         self.HOPPER_CLIENT.open_pipe(
             self.OUTPUT_PIPE, delete=True, create=True)
         self.STATE = WarDogState()
+        self.JSON_READER = JsonReader(
+            self.HOPPER_CLIENT, self.INPUT_PIPE, read_validator=self.validate_message)
         print("Initialized WarDogServer")
+
+    @staticmethod
+    def validate_message(msg):
+        if type(msg) != dict:
+            return False
+        if "request" in msg.keys() and "params" in msg.keys():
+            return True
+        return False
 
     def run(self):
         while (1):
-            d = self.HOPPER_CLIENT.read(self.INPUT_PIPE)
+            s = self.JSON_READER.read()
 
-            try:
-                s = json.loads(d)
-            except json.decoder.JSONDecodeError:
-                print("WARN: Recieved bad JSON string!")
-                continue
+            print(s)
 
             r = WarDogRequest.from_json(s)
+            
+            result = self.STATE.run_request(r);
 
-            r.run_request(self.STATE)
-
-            self.HOPPER_CLIENT.write(
-                self.OUTPUT_PIPE, str(r.result).encode("utf-8"))
+            self.HOPPER_CLIENT.write(self.OUTPUT_PIPE, str(result).encode("utf-8"))

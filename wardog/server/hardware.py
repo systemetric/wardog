@@ -12,7 +12,5 @@ class WarDogHardwareController:
         type(self).__INTIALISED = True
 
     def reset(self):
-
         type(self).__INTIALISED = False
-
         self.__init__()

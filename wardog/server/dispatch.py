@@ -1,5 +1,7 @@
 import json
 
+from .response import WarDogResponse
+
 
 class WarDogHardwareDispatch:
     def __init__(self, hws):
@@ -11,7 +13,7 @@ class WarDogHardwareDispatch:
 
     def dispatch(self, rq):
         code = -1
-        results = {}
+        results = {"error": "bad request"}
 
         if rq.request in self.dispatch_table.keys():
             code, results = self.dispatch_table[rq.request](rq.params)
@@ -19,8 +21,4 @@ class WarDogHardwareDispatch:
             print(
                 f"WARN: Cannot find request '{rq.request}' in dispatch table.")
 
-        return json.dumps({
-            "serial": rq.serial,
-            "code": code,
-            "results": results
-        })
+        return WarDogResponse(code, results)
