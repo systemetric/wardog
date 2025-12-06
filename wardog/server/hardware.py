@@ -13,6 +13,8 @@ class WarDogHardwareController:
 
         print("Initialized WarDogHardwareController")
 
+        self.init_hardware()
+
         type(self).__INTIALISED = True
 
     def init_hardware(self):
