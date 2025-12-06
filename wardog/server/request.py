@@ -16,8 +16,7 @@ class WarDogRequest:
         try:
             w = WarDogRequest(s["request"], s["params"])
         except KeyError:
-            raise ValueError(
-                "JSON request must contain 'request', and 'params' fields.")
+            raise ValueError("JSON request must contain 'request', and 'params' fields.")
         return w
 
     @property
