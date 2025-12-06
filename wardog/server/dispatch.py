@@ -2,7 +2,6 @@ import json
 
 from .response import WarDogResponse
 
-
 class WarDogHardwareDispatch:
     def __init__(self, hws):
         self.hws = hws
