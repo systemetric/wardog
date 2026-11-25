@@ -34,6 +34,9 @@
             # one probably wants these too
             gdb
             valgrind
+
+            # useful for testing
+            socat
           ];
         };
       }
